@@ -1,3 +1,4 @@
+//数字螺旋矩阵问题
 #include<cstdio>
 const int max=26;
 int marix[max][max]={0};

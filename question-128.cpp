@@ -17,10 +17,10 @@ void print01(int index,int n)
 
         k.push_back(0);//访问0
         print01(index+1,n);//然后访问子树
-        k.pop_back();//回到父亲节点
+        k.pop_back();//删除本元素，相当于回到父亲节点
         k.push_back(1);//访问1
         print01(index+1,n);//访问子树
-        k.pop_back();//回到父亲节点
+        k.pop_back();//删除本元素，相当于回到父亲节点
 
     }
 }

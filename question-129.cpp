@@ -22,7 +22,7 @@ void DFS(int index)
     }
 }
 
-bool cmp(vector<int> a,vector<int> b)//&为引用，即会真的
+bool cmp(vector<int> a,vector<int> b)//&为引用，即会真的改变源对象
 {
     if(a.size()!=b.size()) return a.size()<b.size();
     else return a<b;

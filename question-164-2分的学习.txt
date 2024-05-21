@@ -1,0 +1,253 @@
+在二分查找（binary search）中，使用 `while (l <= r)` 和 `while (l < r)` 
+都是常见的循环条件，它们用于不同的情况，取决于具体的需求。以下是它们的使用场景和差异：
+
+### `while (l <= r)`
+
+- **用途**: 用于查找目标值（target）是否存在于数组中。
+- **特性**: 当搜索区间缩小到一个元素时（`l == r`），循环体内的逻辑仍然会执行一次，确保对最后一个元素进行检查。
+- **典型使用场景**: 查找某个特定值在数组中的位置。
+
+#### 示例代码
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int binarySearch(const std::vector<int>& nums, int target) {
+    int l = 0;
+    int r = nums.size() - 1;
+    while (l <= r) {
+        int mid = l + (r - l) / 2;
+        if (nums[mid] == target) {
+            return mid; // 找到目标值，返回其索引
+        } else if (nums[mid] < target) {
+            l = mid + 1;
+        } else {
+            r = mid - 1;
+        }
+    }
+    return -1; // 目标值不存在于数组中
+}
+
+int main() {
+    std::vector<int> nums = {1, 2, 4, 5, 6, 7, 8, 9};
+    int target = 5;
+    int result = binarySearch(nums, target);
+    if (result != -1) {
+        std::cout << "Found at index: " << result << std::endl;
+    } else {
+        std::cout << "Not found" << std::endl;
+    }
+    return 0;
+}
+```
+
+### `while (l < r)`
+
+- **用途**: 用于查找满足某个条件的边界值（例如最小的满足某条件的值或最大的满足某条件的值）。
+- **特性**: 当搜索区间缩小到一个元素时（`l == r`），循环体内的逻辑不再执行。最终，`l` 和 `r` 会收敛到目标边界值。
+- **典型使用场景**: 查找数组中的边界，比如查找第一个大于等于某值的位置或最后一个小于等于某值的位置。
+
+#### 示例代码
+
+```cpp
+#include <iostream>
+#include <vector>
+
+// 查找第一个大于等于 target 的元素的索引
+int lowerBound(const std::vector<int>& nums, int target) {
+    int l = 0;
+    int r = nums.size();
+    while (l < r) {
+        int mid = l + (r - l) / 2;
+        if (nums[mid] < target) {
+            l = mid + 1;
+        } else {
+            r = mid;
+        }
+    }
+    return l; // 返回第一个大于等于 target 的元素的索引
+}
+
+int main() {
+    std::vector<int> nums = {1, 2, 4, 5, 6, 7, 8, 9};
+    int target = 5;
+    int result = lowerBound(nums, target);
+    if (result < nums.size() && nums[result] == target) {
+        std::cout << "First occurrence at index: " << result << std::endl;
+    } else {
+        std::cout << "Not found" << std::endl;
+    }
+    return 0;
+}
+```
+
+### 选择依据
+
+1. **`while (l <= r)`**:
+   - 当需要遍历到最后一个元素，并确保最后一个元素也被检查。
+   - 适用于查找特定值是否存在于数组中。
+   
+2. **`while (l < r)`**:
+   - 当需要查找满足某条件的边界值。
+   - 适用于查找第一个大于等于某值的位置或最后一个小于等于某值的位置。
+
+### 代码示例总结
+
+- **查找目标值（`while (l <= r)`）**:
+  ```cpp
+  int binarySearch(const std::vector<int>& nums, int target) {
+      int l = 0;
+      int r = nums.size() - 1;
+      while (l <= r) {
+          int mid = l + (r - l) / 2;
+          if (nums[mid] == target) {
+              return mid;
+          } else if (nums[mid] < target) {
+              l = mid + 1;
+          } else {
+              r = mid - 1;
+          }
+      }
+      return -1;
+  }
+  ```
+
+- **查找边界值（`while (l < r)`）**:
+  ```cpp
+  int lowerBound(const std::vector<int>& nums, int target) {
+      int l = 0;
+      int r = nums.size();
+      while (l < r) {
+          int mid = l + (r - l) / 2;
+          if (nums[mid] < target) {
+              l = mid + 1;
+          } else {
+              r = mid;
+          }
+      }
+      return l;
+  }
+  ```
+
+
+
+
+
+  `mid` 的计算方式 `(l + r) / 2` 和 `(l + r + 1) / 2` 的选择，与搜索的目标和边界条件有关系，
+  通常与数组是否递增或递减无直接关系。
+
+### `(l + r) / 2`
+
+这种计算方式用于大多数二分查找的场景，特别是查找特定值的索引或查找第一个符合某条件的元素的索引。
+使用 `(l + r) / 2` 可以确保 `mid` 向下取整。
+
+#### 典型场景
+
+1. **查找特定值的索引**：
+
+   ```cpp
+   int binarySearch(const std::vector<int>& nums, int target) {
+       int l = 0;
+       int r = nums.size() - 1;
+       while (l <= r) {
+           int mid = l + (r - l) / 2;
+           if (nums[mid] == target) {
+               return mid;
+           } else if (nums[mid] < target) {
+               l = mid + 1;
+           } else {
+               r = mid - 1;
+           }
+       }
+       return -1;
+   }
+   ```
+
+2. **查找第一个符合某条件的元素**（如第一个大于等于某值的元素）：
+
+   ```cpp
+   int lowerBound(const std::vector<int>& nums, int target) {
+       int l = 0;
+       int r = nums.size();
+       while (l < r) {
+           int mid = l + (r - l) / 2;
+           if (nums[mid] < target) {
+               l = mid + 1;
+           } else {
+               r = mid;
+           }
+       }
+       return l;
+   }
+   ```
+
+### `(l + r + 1) / 2`
+
+这种计算方式常用于查找满足某条件的边界值，特别是在递归或迭代中需要防止无限循环时。
+如果需要偏向右边的中点，就可以使用 `(l + r + 1) / 2`。这种方法确保 `mid` 向上取整。
+
+#### 典型场景
+
+1. **查找最后一个符合某条件的元素**（如最后一个小于等于某值的元素）：
+
+   ```cpp
+   int upperBound(const std::vector<int>& nums, int target) {
+       int l = 0;
+       int r = nums.size();
+       while (l < r) {
+           int mid = l + (r - l + 1) / 2;
+           if (nums[mid] <= target) {
+               l = mid;
+           } else {
+               r = mid - 1;
+           }
+       }
+       return l;
+   }
+   ```
+
+### 总结
+
+- **查找特定值或最左边的满足条件的值**：使用 `(l + r) / 2`，例如查找某值的索引或第一个大于等于某值的位置。
+- **查找最右边的满足条件的值**：使用 `(l + r + 1) / 2`，例如查找最后一个小于等于某值的位置。
+
+### 示例代码
+
+#### 查找第一个大于等于目标值的索引（`(l + r) / 2`）
+
+```cpp
+int lowerBound(const std::vector<int>& nums, int target) {
+    int l = 0;
+    int r = nums.size();
+    while (l < r) {
+        int mid = l + (r - l) / 2;
+        if (nums[mid] < target) {
+            l = mid + 1;
+        } else {
+            r = mid;
+        }
+    }
+    return l;
+}
+```
+
+#### 查找最后一个小于等于目标值的索引（`(l + r + 1) / 2`）
+
+```cpp
+int upperBound(const std::vector<int>& nums, int target) {
+    int l = 0;
+    int r = nums.size() - 1;
+    while (l < r) {
+        int mid = l + (r - l + 1) / 2;
+        if (nums[mid] <= target) {
+            l = mid;
+        } else {
+            r = mid - 1;
+        }
+    }
+    return l;
+}
+```
+
+这两个不同的`mid`计算方式，主要是为了在不同的查找需求下有效地收敛边界，并不是直接与数组的递增或递减特性相关。
